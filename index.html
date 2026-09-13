@@ -485,8 +485,9 @@
             if (warningEl) warningEl.innerText = t.duplicateWarning;
             const row = document.querySelector(`#row-${idx}`);
             if (row) {
-                row.querySelectorAll('.btn-mini')[0].innerText = t.uploadBtn;
-                row.querySelectorAll('.btn-mini').innerText = t.urlBtn;
+                const btns = row.querySelectorAll('.btn-mini');
+                if (btns[0]) btns[0].innerText = t.uploadBtn;
+                if (btns) btns.innerText = t.urlBtn;
             }
         });
 
@@ -498,8 +499,13 @@
 
     window.onload = () => {
         changeLanguage((navigator.language || navigator.userLanguage || '').toLowerCase().startsWith('es') ? 'es' : 'en');
-        for (let k = 0; k < 3; k++) addCharacterRow(null, false);
-        document.getElementById('input-field-0')?.focus();
+        const listContainer = document.getElementById('initial-input-list');
+        if (listContainer) {
+            listContainer.innerHTML = '';
+            characterList = [];
+            for (let k = 0; k < 3; k++) addCharacterRow(null, false);
+            document.getElementById('input-field-0')?.focus();
+        }
     };
 
     function addCharacterRow(initialData = null, autoFocus = true) {
@@ -819,7 +825,7 @@
         });
 
         [300, 700, 1100].forEach((delay, idx) => {
-            const cardId =[idx];
+            const cardId = idx + 1;
             setTimeout(() => document.getElementById(`podium-card-${cardId}`)?.classList.add('revealed'), delay);
         });
 
@@ -849,7 +855,7 @@
 
         const mime = match || 'application/octet-stream';
         const isBase64 = !!match;
-        const payload = match;
+        const payload = match[3];
         const binary = isBase64 ? atob(payload) : decodeURIComponent(payload);
         const bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
@@ -874,7 +880,6 @@
         return blob;
     }
 
-    // MODIFICADO: Ahora apunta a tu proxy de Vercel (/api/proxy) [cite: 2]
     async function fetchRemoteImageBlob(src) {
         const proxyUrl = `/api/proxy?url=${encodeURIComponent(src)}`;
 
