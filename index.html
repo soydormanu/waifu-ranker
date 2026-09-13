@@ -854,7 +854,7 @@
         if (!match) throw new Error('DATA URL inválida');
 
         const mime = match || 'application/octet-stream';
-        const isBase64 = !!match;
+        const isBase64 = !!match[2];
         const payload = match[3];
         const binary = isBase64 ? atob(payload) : decodeURIComponent(payload);
         const bytes = new Uint8Array(binary.length);
@@ -1053,7 +1053,7 @@
             const podiumItems = [
                 { item: top3[1], image: top3 ? imageByItem.get(top3) : null, x: pad, w: cardW2, rank: 2, color: '#bac2de', y: podiumTop + 18 },
                 { item: top3[0], image: top3[0] ? imageByItem.get(top3[0]) : null, x: pad + cardW2 + gap, w: cardW1, rank: 1, color: '#f9e2af', y: podiumTop },
-                { item: top3, image: top3 ? imageByItem.get(top3) : null, x: pad + cardW2 + gap + cardW1 + gap, w: cardW3, rank: 3, color: '#fab387', y: podiumTop + 18 }
+                { item: top3[2], image: top3[2] ? imageByItem.get(top3[2]) : null, x: pad + cardW2 + gap + cardW1 + gap, w: cardW3, rank: 3, color: '#fab387', y: podiumTop + 18 }
             ].filter(p => p.item);
 
             if (podiumItems.length < 3) {
